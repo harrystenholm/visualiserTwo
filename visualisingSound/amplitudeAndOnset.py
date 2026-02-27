@@ -7,9 +7,11 @@ y, sr = librosa.load(audioPath)
 
 #standard fourier transform to get the frequencies and their amplitudes at each time step
 stft = librosa.stft(y)
+#Convert complex STFT to magnitude
+S = np.abs(stft)
 
 #find maximum amplitude across frequencies for each time step
-amplitude_envelope = np.max(np.abs(stft), axis = 0)
+amplitude_envelope = np.max(S, axis = 0)
 
 #initialise main plot
 plt.figure(figsize=(12, 6))
