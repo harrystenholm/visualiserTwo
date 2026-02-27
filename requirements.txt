@@ -2,3 +2,5 @@ librosa
 matplotlib
 google
 pyaudio
+time
+pylab

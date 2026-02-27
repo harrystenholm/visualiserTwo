@@ -1,17 +1,21 @@
 import librosa
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
 import numpy as np
 import pyaudio
-from pyparsing import line
+import time
 
-class Visualiser(object):
+class Visualiser():
+
     def __init__(self):
         #Config
-        self.chunk = 1024
-        self.format = pyaudio.paFloat32
+        self.format = pyaudio.paInt16
         self.channels = 1
         self.rate = 44100
+        self.chunk = int(self.rate/20)
         self.n_fft = 2048
+        self.x = np.arange(0, 100, self.chunk)
+        self.y = 0
 
         #initialise pyaudio
         p = pyaudio.PyAudio()
@@ -23,19 +27,23 @@ class Visualiser(object):
             frames_per_buffer=self.chunk
         )
 
-        #Setup plot
-        fig, ax = plt.subplots(figsize = (12, 6))
-        x = np.linspace(0, self.rate/2, self.n_fft // 2 + 1)
-        line, = ax.plot(x, np.random.rand(self.n_fft // 2 + 1))
-        ax.set_xlim(20, 20000)
-        ax.set_xlim(0, 1)
-        ax.set_xscale('log')
+        #plot data
+        self.fig, ax = plt.subplots()
+        self.line, = ax.plot(self.x[0], self.y)
 
-    def update(self):
-        for i in range(10):
-            data = self.stream.read(self.chunk)
-            print(data)
+    def update(self, frame):
+        self.data = np.frombuffer(self.stream.read(self.chunk), dtype=np.int16)
+        self.line.set_ydata(self.data)
+        self.line.set_xdata(self.x[:frame])
+        return self.line
+         
+    
+    def animate(self):
+        ani = anim.FuncAnimation(fig=self.fig, func=self.update, frames=50, interval=10)
+        plt.show()
+
 
 if __name__ == "__main__":
         v = Visualiser()
-        v.update()
+        v.animate()
+        
