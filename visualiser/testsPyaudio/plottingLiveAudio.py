@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 import numpy as np
 import pyaudio
+import time
 
 #Config
 format = pyaudio.paInt16
@@ -38,6 +39,7 @@ if __name__ == "__main__":
         line.set_ydata(data)
         fig.canvas.draw()
         fig.canvas.flush_events()
+        time.sleep(0.01)
 
 stream.stop_stream()
 stream.close()

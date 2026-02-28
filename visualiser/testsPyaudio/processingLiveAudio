@@ -1,0 +1,39 @@
+import librosa
+import matplotlib.pyplot as plt
+import matplotlib.animation as anim
+import numpy as np
+import time
+import pyaudio
+
+#Config
+format = pyaudio.paInt32
+channels = 1
+rate = 44100
+chunk = 512 * channels
+inputIndex = 8
+
+p = pyaudio.PyAudio()
+
+def callback(in_data, frame_count, time_info, status):
+    in_data = np.frombuffer(in_data, dtype=np.int32)
+    print(in_data)
+    return (in_data, pyaudio.paContinue)
+
+stream = p.open(
+    format = format,
+    channels = channels,
+    rate = rate,
+    input = True,
+    input_device_index=inputIndex,
+    frames_per_buffer = chunk,
+    stream_callback = callback
+)
+
+stream.start_stream()
+
+for i in range(0, 1):
+    time.sleep(0.1)
+ 
+stream.stop_stream()
+stream.close()
+p.terminate()

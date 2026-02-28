@@ -3,3 +3,4 @@ matplotlib
 google
 pyaudio
 pyAudioDspTools
+sounddevice
