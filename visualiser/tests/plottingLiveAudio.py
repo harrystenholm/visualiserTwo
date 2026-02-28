@@ -6,10 +6,10 @@ import pyaudio
 
 #Config
 format = pyaudio.paInt16
-channels = 2
+channels = 1
 rate = 44100
-chunk = 1024*channels
-index = 9
+chunk = 2048
+inputIndex = 8
 
 #define plot
 fig, ax = plt.subplots()
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         channels = channels,
         rate = rate,
         input = True,
-        input_device_index=index,
+        input_device_index=inputIndex,
         frames_per_buffer = chunk
     )
 

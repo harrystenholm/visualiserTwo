@@ -2,3 +2,4 @@ librosa
 matplotlib
 google
 pyaudio
+pyAudioDspTools
