@@ -4,3 +4,4 @@ google
 pyaudio
 pyAudioDspTools
 sounddevice
+pyQt5
