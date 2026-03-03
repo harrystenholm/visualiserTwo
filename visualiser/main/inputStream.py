@@ -1,28 +1,39 @@
+from PyQt5.QtCore import QObject, pyqtSignal
 import sounddevice as sd
 import numpy as np
 import librosa
 
-class InputStream():
+class InputStream(QObject):
+    waveForm = pyqtSignal(np.ndarray)
+    dB = pyqtSignal(int)
 
-    def __init__(self, line):
-    
+    def __init__(self, mode, parent = None):
+        super().__init__(parent)
+        self.plotType = mode
+        
         #Config
         format = np.float32
-        channels = 2
-        samplerate = 48000
-        chunk = 1024 * channels
-        audioData = np.zeros(chunk)
-        inputIndex = 6
-        audioData = np.zeros((chunk, channels))
-
-        #callback from input stream
-        def callback(indata, frames, time, status):
-            global audioData
-            audioData = indata.copy()
-            line.setData(audioData[:, 0])
+        self.channels = 2
+        self.samplerate = 48000
+        self.chunk = 1024 * self.channels
+        self.inputIndex = 6
 
         #start stream
-        stream = sd.InputStream(dtype='float32', callback = callback, 
-                    blocksize=chunk, device=inputIndex, 
-                    samplerate=samplerate, channels=channels)
+        stream = sd.InputStream(dtype='float32', callback = self.callback, 
+                    blocksize=self.chunk, device=self.inputIndex, 
+                    samplerate=self.samplerate, channels=self.channels)
         stream.start()
+        
+    def set_mode(self, mode):
+        self.plotType = mode
+
+        #callback from input stream
+    def callback(self, indata, frames, time, status):
+        audioData = indata.copy()
+        if self.plotType == "waveform":
+            self.waveForm.emit(audioData[:,0])
+        elif self.plotType == "dB":
+            rms = np.sqrt(np.mean(audioData**2))
+            volume = int(rms * 100)
+            self.dB.emit(volume)
+

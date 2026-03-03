@@ -16,7 +16,6 @@ class MainWindow(QtWidgets.QMainWindow):
         volumeBar = pg.QtWidgets.QProgressBar()
         volumeBar.setRange(0, 100)
         volumeBar.setTextVisible(False)
-        volumeBar.set
         self.setCentralWidget(volumeBar)
 
         #call input stream to update waveform plot
