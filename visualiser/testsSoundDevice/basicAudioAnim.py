@@ -9,7 +9,7 @@ format = np.int16
 channels = 2
 samplerate = 48000
 chunk = 1024 * channels
-inputIndex = 2
+inputIndex = 6
 audioData = np.zeros((chunk, channels))
 
 #Plot config
