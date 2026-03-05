@@ -19,10 +19,10 @@ class InputStream(QObject):
         self.inputIndex = 6
 
         #start stream
-        stream = sd.InputStream(dtype='float32', callback = self.callback, 
+        self.stream = sd.InputStream(dtype='float32', callback = self.callback, 
                     blocksize=self.chunk, device=self.inputIndex, 
                     samplerate=self.samplerate, channels=self.channels)
-        stream.start()
+        self.stream.start()
         
     def set_mode(self, mode):
         self.plotType = mode
@@ -36,4 +36,9 @@ class InputStream(QObject):
             rms = np.sqrt(np.mean(audioData**2))
             volume = int(rms * 100)
             self.dB.emit(volume)
+        elif self.plotType == "graphics":
+            rms = np.sqrt(np.mean(audioData**2))
+            volume = int(rms * 100)
+            self.dB.emit(volume)
+            self.waveForm.emit(audioData[:,0])
 
